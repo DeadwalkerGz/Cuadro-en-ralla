@@ -7,7 +7,7 @@ static const int ROWS = 6; // Filas
 static const int COLS = 7;
 
 void printBoard(const vector<vector<char>>& b) {
-    cout << "\n  1 2 3 4 5 6 7\n"; // muestra los numeros de las columnas arriba del tablero
+    cout << "\n   1 2 3 4 5 6 7\n"; // muestra los numeros de las columnas arriba del tablero
 
     //recorre cada fila del arreglo
     for ( int r = 0; r < ROWS; ++r) {
