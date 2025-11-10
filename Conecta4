@@ -1,0 +1,5 @@
+#include <iostream>
+int main() {
+    std::cout << "=== Conecta 4 — Modo consola (6x7) ===\n";
+    return 0;
+}
