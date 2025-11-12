@@ -22,6 +22,24 @@ void printBoard(const vector<vector<char>>& b) {
     cout << "-----------------\n";  // Linea inferior del tablero
 }
 
+// verifica colimna llena
+bool isColumnFull(const vector<vector<char>>& b, int c) {
+    return b[0][c] != '.'; // si no esta vacio, esta lleno
+}
+
+// Coloca la ficha
+int dropPiece(vector<vector<char>>& b, int c, char sym) {
+    if (c < 0 || c >= COLS || isColumnFull(b, c)) return -1; // no valido o lleno
+    for (int r = ROWS - 1; r >= 0; --r) { // desde abajo a arriba
+        if (b[r][c] == '.') { // encuentra un lugar vacio
+            b[r][c] = sym; // colocar ficha x o o
+            return r; // devuelve la coordenada donde cayo la ficha
+        }
+    }
+    return -1; // error si no encuentra espacio
+}
+
+
 int askColumn(const string & playerName){
     while (true) { //bucle infinito hasta que el jugador de una entrada valida
         cout << playerName << ", elige una columna (1-7): "; // muestra mensaje para elegir columna
@@ -52,20 +70,33 @@ int askColumn(const string & playerName){
 }
 
 
-int main() { // bucle principal
-    cout << "=== Conecta 4 — Modo consola (6x7) ===\n";  //imprime mensaje, titulo
-    
-    // Crea un tablero de 6 f x 7 c lleno de puntos 
-    vector<vector<char>> board(ROWS, vector<char>(COLS, '.'));
+int main() {
+    cout << "=== Conecta 4 — Modo consola (6x7) ===\n";
 
-    // llama la funcion para imprimir el tablero
+    vector<vector<char>> board(ROWS, vector<char>(COLS, '.'));
+    char current = 'X'; // quien inicia
     printBoard(board);
 
-    //pregunta al jugador que elija una columna
-    int c = askColumn("Jugador 1 (X)");
+    while (true) { // bucle
+        string name = (current == 'X') ? "Jugador 1 (X)" : "Jugador 2 (O)";
+        int col = askColumn(name); // pide la columna
 
-    //muestro columna elejida
-    cout << "Elegiste columna (0-based): " << c << "\n";
+        if (col == -1) { // si presionan fin de entrada 
+            cout << "Salida.\n";
+            return 0;
+        }
 
-    return 0; // devuelve cero
+        if (isColumnFull(board, col)) { // verficia que exista espacio
+            cout << "Columna llena. Elige otra.\n";
+            continue;
+        }
+
+        dropPiece(board, col, current); // animacion para caida de ficha
+        printBoard(board); // muestra tablero actualizado
+
+        // cambia de jugador
+        current = (current == 'X') ? 'O' : 'X';
+    }
+
+    return 0;
 }
