@@ -5,7 +5,7 @@ using std::cout; using std::cin; using std::vector; using std::string;  // poner
 
 // Constantes para definir las columnas y filas del arreglo
 static const int ROWS = 6; // Filas
-static const int COLS = 7;
+static const int COLS = 7;// columnas
 
 void printBoard(const vector<vector<char>>& b) {
     cout << "\n   1 2 3 4 5 6 7\n"; // muestra los numeros de las columnas arriba del tablero
@@ -39,6 +39,41 @@ int dropPiece(vector<vector<char>>& b, int c, char sym) {
     return -1; // error si no encuentra espacio
 }
 
+//ver empate
+bool isFull(const vector<vector<char>>& b) {
+    for (int c = 0; c < COLS; ++c)
+        if (b[0][c] == '.') return false;
+    return true;
+}
+
+// mirar si pasa 4 en ralla
+bool checkWinner(const vector<vector<char>>& b, char sym) {
+    //horizontal hacia los lados
+    for (int r = 0; r < ROWS; ++r)
+        for (int c = 0; c <= COLS - 4; ++c)
+            if (b[r][c] == sym && b[r][c+1] == sym && b[r][c+2] == sym && b[r][c+3] == sym)
+                return true;
+
+    //vertica abajo
+    for (int r = 0; r <= ROWS - 4; ++r)
+        for (int c = 0; c < COLS; ++c)
+            if (b[r][c] == sym && b[r+1][c] == sym && b[r+2][c] == sym && b[r+3][c] == sym)
+                return true;
+
+    //diagonal abajo a derecha
+    for (int r = 0; r <= ROWS - 4; ++r)
+        for (int c = 0; c <= COLS - 4; ++c)
+            if (b[r][c] == sym && b[r+1][c+1] == sym && b[r+2][c+2] == sym && b[r+3][c+3] == sym)
+                return true;
+
+    //diagonal abajo a izquierda
+    for (int r = 0; r <= ROWS - 4; ++r)
+        for (int c = 3; c < COLS; ++c)
+            if (b[r][c] == sym && b[r+1][c-1] == sym && b[r+2][c-2] == sym && b[r+3][c-3] == sym)
+                return true;
+
+    return false; //nadie gana
+}
 
 int askColumn(const string & playerName){
     while (true) { //bucle infinito hasta que el jugador de una entrada valida
@@ -53,7 +88,7 @@ int askColumn(const string & playerName){
             cout << "entrada vacia. \n";
             continue; // vuelve a pedir      
         }
-        string t = line.substr(s, e - s + 1); // 📍 NUEVO: crea una versión limpia del texto
+        string t = line.substr(s, e - s + 1); //texto limpio
         try {
             int col = std::stoi(t); // convertir txt a int
             if (col < 1 || col > 7) { // valida rango
@@ -61,7 +96,7 @@ int askColumn(const string & playerName){
                 continue;
             }
             return col - 1; // indice ajustad
-        } catch (...) { // 📍 capturar si no se convierte a int
+        } catch (...) { //verificar si se convierte en numero
             cout << "Ingresa un número 1-7.\n"; //pregunta
         }
         
@@ -93,6 +128,19 @@ int main() {
 
         dropPiece(board, col, current); // animacion para caida de ficha
         printBoard(board); // muestra tablero actualizado
+
+        //ganadir?
+        if (checkWinner(board, current)) {
+            cout << name << " ha ganado\n";
+            break; // termina el bucle
+        }
+
+        //empate
+        if (isFull(board)) {
+            cout << "Empate.\n";
+            break;
+        }
+        
 
         // cambia de jugador
         current = (current == 'X') ? 'O' : 'X';
