@@ -75,7 +75,7 @@ bool checkWinner(const vector<vector<char>>& b, char sym) { //funcion
     return false; //nadie gana
 }
 
-int askColumn(const string & playerName){
+int askColumn(const string & playerName){ //funcion para preguntar que columna se coloca el signo
     while (true) { //bucle infinito hasta que el jugador de una entrada valida
         cout << playerName << ", elige una columna (1-7): "; // muestra mensaje para elegir columna
         string line; // variable para guardar texto ingresado
@@ -105,7 +105,7 @@ int askColumn(const string & playerName){
 }
 
 
-int main() {
+int main() { //bucle principal
     cout << "=== Conecta 4 — Modo consola (6x7) ===\n"; // texto de titulo
 
     vector<vector<char>> board(ROWS, vector<char>(COLS, '.'));  // crea una variable  tipo char  guardando los parametros
